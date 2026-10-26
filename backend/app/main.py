@@ -13,6 +13,12 @@ import backend.app.models
 async def lifespan(app: FastAPI):
     # Initialize DB schema
     Base.metadata.create_all(bind=engine)
+    # Auto-seed demo user & business if empty
+    try:
+        from backend.scripts.seed_demo import seed_database
+        seed_database()
+    except Exception as e:
+        print(f"Auto-seed notification: {e}")
     yield
 
 app = FastAPI(
